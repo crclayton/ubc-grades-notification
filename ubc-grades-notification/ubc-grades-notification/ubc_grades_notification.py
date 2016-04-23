@@ -19,23 +19,24 @@ def send_email(recipient, sender, password, msg, host="smtp.gmail.com"):
 
 def get_ssc_grades(ssc_username, ssc_password, browser):
     browser.get("https://ssc.adm.ubc.ca/sscportal/servlets/SRVAcademicRecord?context=html?context=html")
-    try:
+
+    try: # re-login if SSC has timed out
         browser.find_element_by_id("username").send_keys(ssc_username)
         browser.find_element_by_id("password").send_keys(ssc_password)
         browser.find_element_by_name("submit").click()
     except NoSuchElementException:
         pass
+
     return browser.find_element_by_id("allSessionsGrades").text
 
 
-driver = webdriver.Firefox()
-#driver = webdriver.Chrome("C:/../../chromedriver.exe")
-#driver = webdriver.PhantomJS("C:/../../phantomjs.exe")
+driver = webdriver.Firefox() # or ChromeDriver/PhantomJS
 previous_marks = get_ssc_grades(ubc_name, ubc_pass, driver)
 while True:
     marks = get_ssc_grades(ubc_name, ubc_pass, driver)
     if marks != previous_marks:
+        # smtp.live.com is for outlook, leave blank if using gmail
         send_email(email, email, email_pass, marks, "smtp.live.com") 
-        print("Marks uploaded")
+        print("Marks uploaded. Email sent.")
     previous_marks = marks
     sleep(60*60)
