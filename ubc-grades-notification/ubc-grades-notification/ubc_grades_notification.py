@@ -36,7 +36,7 @@ while True:
     marks = get_ssc_grades(ubc_name, ubc_pass, driver)
     if marks != previous_marks:
         # smtp.live.com is for outlook, leave blank if using gmail
-        send_email(email, email, email_pass, marks, "smtp.live.com") 
+        send_email(email_addr, email_addr, email_pass, marks, "smtp.live.com") 
         print("Marks uploaded. Email sent.")
     previous_marks = marks
     sleep(60*60)
